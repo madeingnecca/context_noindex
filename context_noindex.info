@@ -1,0 +1,9 @@
+name = "Context No Index"
+
+description = "Prevent your site from being indexed by search engines."
+package = "Context"
+core = "7.x"
+
+dependencies[] = "context"
+
+

@@ -1,0 +1,45 @@
+<?php
+
+/**
+ * Implementation of hook_context_plugins().
+ */
+function context_noindex_context_plugins() {
+  $module_path = drupal_get_path('module', 'context_noindex');
+
+  $plugins = array();
+  $plugins['context_noindex_reaction_noindex'] = array(
+    'handler' => array(
+      'path' => $module_path . '/plugins',
+      'file' => 'context_noindex_reaction_noindex.inc',
+      'class' => 'context_noindex_reaction_noindex',
+      'parent' => 'context_reaction',
+    ),
+  );
+
+  return $plugins;
+}
+
+/**
+ * Implementation of hook_context_registry().
+ */
+function context_noindex_context_registry() {
+  return array(
+    'reactions' => array(
+      'noindex' => array(
+        'title' => t('No-index'),
+        'description' => t('Prevent website to be indexed by search engines.'),
+        'plugin' => 'context_noindex_reaction_noindex',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_page_alter().
+ */
+function context_noindex_page_alter() {
+  $map = context_reactions();
+  if (!empty($map['noindex']) && $plugin = context_get_plugin('reaction', 'noindex')) {
+    $plugin->execute();
+  }
+}
